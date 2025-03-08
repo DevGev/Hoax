@@ -1,0 +1,6 @@
+build
+disassembler
+memscan
+compile_commands.json
+*.out
+.*
