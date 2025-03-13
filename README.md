@@ -12,6 +12,7 @@
 
 ## Issues
 - [ ] <strong>TODO</strong> process list does not update <strong>good first commit!</strong>
+- [ ] <strong>TODO</strong> documentation or guide <strong>good first commit!</strong>
 - [ ] <strong>TODO</strong> address value updater (background thread)
 
 ## Roadmap
@@ -19,6 +20,7 @@
 - [ ] theming <strong>good first commit!</strong>
 - [ ] standardized configuration <strong>good first commit!</strong>
 - [ ] plugin protocol
+- [ ] signature generator
 - [ ] assembler (replace existing assembly with your own) <i>[CE feature]</i>
 - [x] find out what accesses / writes to this address <i>[CE feature]</i>
 - [x] memory view
@@ -40,7 +42,7 @@ Make sure that changes are in line with the project direction, utilize the roadm
 
 ## Guidelines
 * Match casing with existing code
-* Both C/C++ code is welcomed
+* Both C and C++ code is welcomed
 * Python is the primary scripting language for interfacing with GDB and scanmem
 
 ## Example Git workflow
@@ -71,4 +73,4 @@ git rebase master
 
 ## Communication
 
-GitHub is the main platform for communication @ DevGev/Torr.
+GitHub is the main platform for communication @ DevGev/Hoax.
