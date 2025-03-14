@@ -38,6 +38,7 @@ bool getlinkedpath(const char *linkpath, char *linkedpath)
 process_entry* proclist()
 {
     static process_entry list[1024];
+    memset(list, 0, sizeof(list));
     list[0].name[0] = 0;
     list[0].pid = 0;
     size_t list_index = 0;

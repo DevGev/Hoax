@@ -49,6 +49,7 @@ private:
 
     void open_notepad();
     void close_notepad();
+    void update_process_picker();
     void open_process_picker();
     void close_process_picker(Fl_Widget* widget);
     void open_store_address(Fl_Widget* widget);

@@ -3,6 +3,24 @@
 #include "../../tools/tools.h"
 #include <ctype.h>
 
+static char process_list_ui_strings[512][500];
+
+void UI::update_process_picker()
+{
+    if (!window_process_picker->visible())
+        return;
+
+    process_entry* process_list = proclist();
+    char* entry_string = 0;
+    for (int i = 0; i < 500; i++) {
+        Fl_Button* process_item = new Fl_Button(0, 15 + i * 20, 295, 18,
+            (entry_string == 0) ? "  pid\t\t\t\t\t  name" : entry_string);
+        entry_string = process_list_ui_strings[i];
+        snprintf(entry_string, 512, "  %4d     %35s",
+            process_list[i].pid, process_list[i].name);
+    }
+}
+
 void UI::create_window_process_picker()
 {
     window_process_picker = new Fl_Window(300, 600);
@@ -24,7 +42,7 @@ void UI::create_window_process_picker()
 
         style_scroller_item(process_item, i);
 
-        entry_string = new char[512];
+        entry_string = process_list_ui_strings[i];
         snprintf(entry_string, 512, "  %4d     %35s",
             process_list[i].pid, process_list[i].name);
     }

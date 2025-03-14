@@ -214,6 +214,7 @@ int UI::show(int argc, char** argv)
         size_t ltime = time(NULL) - tspec;
         if (!ltime) continue;
 
+        update_process_picker();
         address_scroller->redraw();
         stored_address_scroller->redraw();
         window_process_picker->redraw();
