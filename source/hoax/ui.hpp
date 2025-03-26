@@ -45,6 +45,7 @@ private:
     Fl_Input_Choice* scan_type_choice;
     Fl_Box* scan_status_label;
     Fl_Help_View* instruction_view;
+    Fl_Multiline_Input* notepad;
     char* address_items_labels[MAX_ADDRESS_ITEMS];
 
     void open_notepad();
@@ -110,4 +111,13 @@ private:
     } stored_address_entry;
 
     stored_address_entry stored_addresses[100];
+
+    void save_state_as_file();
+    void load_state_from_file();
+
+    typedef struct {
+        char magic[4];
+        stored_address_entry entries[100];
+        char notepad[BUFSIZ];
+    } save_state_t;
 };

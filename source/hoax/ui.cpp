@@ -3,6 +3,7 @@
 #include "../tools/tools.h"
 #include <stdio.h> 
 #include <time.h> 
+#include <fcntl.h>
 #include <thread>
 #include <unistd.h> 
 #include <string.h> 
@@ -24,6 +25,24 @@ UI::UI()
         [](Fl_Widget*, void*) -> void {
             UI::active->ignore_update_scan_list = true;
             UI::active->open_process_picker();
+        }
+    );
+
+    Fl_Button* button_save_state = new Fl_Button(215, 15, 70, 20, "save");
+    style_button(button_save_state);
+    button_save_state->color(fg_accent_color);
+    button_save_state->callback(
+        [](Fl_Widget*, void*) -> void {
+            UI::active->save_state_as_file();
+        }
+    );
+
+    Fl_Button* button_load_state = new Fl_Button(295, 15, 70, 20, "load");
+    style_button(button_load_state);
+    button_load_state->color(fg_accent_color);
+    button_load_state->callback(
+        [](Fl_Widget*, void*) -> void {
+            UI::active->load_state_from_file();
         }
     );
 
@@ -292,4 +311,59 @@ void UI::delete_stored_address(uint32_t position)
     }
 
     stored_address_scroller->redraw();
+}
+
+static char zenity_line[1024];
+char* zenity_dialog(const char* cmd)
+{
+    memset(zenity_line, 0, sizeof(zenity_line));
+    FILE* fp = popen(cmd, "r");
+
+    if (fp == NULL) {
+        perror("Pipe returned a error");
+    } else {
+        while (fgets(zenity_line, sizeof(zenity_line), fp))
+            if (zenity_line[0] != '/') continue;
+        if (WEXITSTATUS(pclose(fp)) != 0)
+            return NULL;
+    }
+
+    for (int i = 0; i < sizeof(zenity_line); i++) {
+        if (zenity_line[i] == '\n') zenity_line[i] = 0;
+        if (zenity_line[i] == '\r') zenity_line[i] = 0;
+        if (zenity_line[i] == '\b') zenity_line[i] = 0;
+    }
+    return zenity_line;
+}
+
+void UI::load_state_from_file()
+{
+    char* file_name = zenity_dialog("zenity --file-selection --title=]\"Load state\"");
+    if (!file_name) return;
+
+    save_state_t state;
+    memcpy(&state.entries, &stored_addresses, sizeof(stored_addresses));
+
+    int fd = open(file_name, O_RDONLY, 0666);
+    read(fd, &state, sizeof(state));
+    close(fd);
+
+    if (strncmp(state.magic, "hoax", 4) != 0) return;
+    memcpy(&stored_addresses, &state.entries, sizeof(stored_addresses));
+    notepad->value(state.notepad);
+}
+
+void UI::save_state_as_file()
+{
+    char* file_name = zenity_dialog("zenity --file-selection --save --title=]\"Save state\"");
+    if (!file_name) return;
+
+    save_state_t state;
+    strncpy(state.magic, "hoax", 4);
+    memcpy(&state.entries, &stored_addresses, sizeof(stored_addresses));
+    strncpy(state.notepad, notepad->value(), sizeof(state.notepad));
+
+    int fd = open(file_name, O_RDWR | O_CREAT, 0666);
+    write(fd, &state, sizeof(state));
+    close(fd);
 }
