@@ -30,7 +30,7 @@
      - [x] ints/floats
      - [ ] comprehensive expressions
 - [ ] pointer scan <i>[CE feature]</i>
-- [ ] save feature <i>[CE feature]</i>
+- [x] save feature <i>[CE feature]</i>
 
 
 ## Contribute
